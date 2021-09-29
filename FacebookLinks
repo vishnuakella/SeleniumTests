@@ -1,0 +1,42 @@
+//This code navigates to the facebook login page and picks up the links in the footer section and opens them one after the other in the new tabs in the browser. Then navigates to each tab. In the console you can see the output as the Total number of links and the titles of each of the pages upon clicking the links.
+//Similar code can be used where the number of links or the actual links are dynamic on a webpage and you want to perofrm above test.
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Tutorials {
+
+	public static void main(String[] args) 
+	{
+		System.setProperty("webdriver.chrome.driver", "C:\\Eclipse\\chromedriver.exe"); //change this path 
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://www.facebook.com/");
+		driver.manage().window().maximize();
+		driver.findElement(By.xpath("//a[@title='English (UK)']")).click();   //this is optional. Added this because facebook opens in a local language by default. Changing to English before proceeding further
+		System.out.println("Number of Links in the footer section :");
+		WebElement footerdriver = driver.findElement(By.cssSelector(".uiList.pageFooterLinkList._509-._4ki._703._6-i")); //footer
+		System.out.println(footerdriver.findElements(By.tagName("a")).size()); 
+		for(int i=0; i<footerdriver.findElements(By.tagName("a")).size();i++)
+		{
+      footerdriver.findElements(By.tagName("a")).get(i).sendKeys(Keys.CONTROL,Keys.ENTER);  //to open in a new page ctrl+Enter or ctrl+click
+		}
+		System.out.println("Titles of the pages are below :\n");
+		Set<String> winds = driver.getWindowHandles();
+		Iterator<String> Itr =  winds.iterator(); 
+		while(Itr.hasNext())   //as long as there is a next page loop runs
+		{
+		   driver.switchTo().window((Itr.next()));
+		   System.out.println(driver.getTitle());
+		   
+	    }
+		driver.quit();  //to close all the opened tabs. With close() only the current one gets closed
+
+    } 
+} 
